@@ -1,0 +1,65 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage[makeroom]{cancel}
+\usepackage{hyperref}
+
+\begin{document}
+\title{Estimating $e$ on a checkerboard}
+\author{Samuel Hunter}
+\date{8 September 2019}
+\maketitle
+
+\section*{Method}
+Adapted from \url{https://twitter.com/JohnAllenPaulos/status/743085219511554049}
+Take an $n$ x $n$ checkerboard and label its squares 1 to $m=n^2$. Randomly generate $m$ whole numbers between 1 and $m$. For each of the numbers generated, place a penny on the square with the same number. The ratio of total squares, $m$, to squares with no pennies, $U$, is approximately $e$.
+
+\section*{Solution}
+For the $i$th square ($1 \leq i \leq m$), let $X_i$ be a random variable denoting the number of pennies on the $i$th square after all pennies have been placed.
+
+\begin{equation}
+	X_i \sim Binomial(m, \frac{1}{m})
+\end{equation}
+
+\noindent Define a new indicator random variable
+\begin{equation}
+	Y_i=
+	\begin{cases}
+		0, & \text{if}\ X_i=0 \qquad \text{square is empty} \\
+		1, & \text{otherwise}
+	\end{cases}
+\end{equation}
+
+Then $Y_i$ is a Bernoulli trial with expected value
+\begin{equation}
+	\mathbb{E}[Y_i] = 1*\mathbb{P}(X_i=0) + 0*\mathbb{P}(X_i>0) = (1-\frac{1}{m})^m
+\end{equation}
+
+\noindent Now over all of the squares, the number of empty squares is given by
+\begin{equation}
+	U = \sum_{i=1}^{m}{Y_i}
+\end{equation}
+\indent Take its expected value:
+\begin{align}
+	\mathbb{E}[U] &= \mathbb{E}[\sum_{i=1}^{m}{Y_i}]\nonumber\\
+	&=\sum_{i=1}^{m}{\mathbb{E}[Y_i]} &&\text{by linearity of expectation}\nonumber\\
+	&=\sum_{i=1}^{m}{(1-\frac{1}{m})^m} &&\text{by (3)}\nonumber\\
+	&=m(1-\frac{1}{m})^m
+\end{align}
+
+\noindent Remember, we are interested in the ratio
+\begin{equation*}
+	\frac{\text{total squares}}{\text{empty squares}} = \frac{m}{U}
+\end{equation*}
+\indent which on average is
+\begin{equation*}
+	\frac{m}{\mathbb{E}[U]} = \frac{\cancel{m}}{\cancel{m}(1-\frac{1}{m})^m} = (1-\frac{1}{m})^{-m}
+\end{equation*}
+\indent Taking the limit as total squares increases without bound,
+\begin{equation}
+	\lim_{m\to\infty} (1-\frac{1}{m})^{-m} = (\lim_{m\to\infty} (1-\frac{1}{m})^m)^{-1} = (e^{-1})^{-1} = e
+\end{equation}
+
+\qed
+\end{document}

@@ -1,0 +1,69 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{enumerate}
+
+\begin{document}
+\title{Racetrack Problem}
+\author{Samuel Hunter}
+\date{7 September 2019}
+\maketitle
+
+\section*{Question}
+Along a 1000 mile race track are placed 50 gallons of gas, split between any number of gas cans, placed anywhere. The racecar run on 20 miles per gallon and starts on an empty tank that can hold up to 50 gallons.
+
+Given any configuration of the gas cans, is there always a starting position that the racer can select to complete the entire track?
+
+\subsection*{Notation}
+A configuration $C = \{d_i, r_i\}_{i=1}^n$ describes n gas cans with a pair of sequences
+\indent$d_i$ : distance, in miles, to the $(i+1)$th gas can\\
+\indent$r_i$ : additional range, in miles, provided the $i$th gas can\\
+\indent\qquad (equal to 20 mpg * gallons of gas)\\
+subject to the constraints
+\begin{align*}
+d_i,r_i &> 0\\
+\sum_{i=1}^{n} {d_i,r_i} &= 1000
+\end{align*}
+\textbf{Definition:} \quad For a configuration to be \emph{completable}, we must have
+\begin{align*}
+\forall 1 \leq j \leq n, \quad \sum_{i=1}^{j} {r_i} \geq \sum_{i=1}^{j} {d_i}
+\end{align*}
+(At all times, the range of the racecar is enough to reach the next gas can.)
+
+\pagebreak
+\section*{Proof}
+Let $C = \{d_i, r_i\}_{i=1}^n$ be any configuration. Set the first gas can as the 0 position on the track. Assume the racer cannot complete the entire track starting from there. Then $\exists j \geq 1 :$
+\begin{align}
+\sum_{i=1}^{j-1} {r_i} &\geq \sum_{i=1}^{j-1} {d_i} &&\text{The racecar is able to reach the $j$th can,}\\
+\sum_{i=1}^{j} {r_i} &< \sum_{i=1}^{j} {d_i} &&\text{but runs out of gas before the $(j+1)$th can.}
+\end{align}
+Combining (2) with our constraints for $\{d_i\}$ and $\{r_i\}$ we get
+\begin{align}
+\sum_{i=1}^{j-1} {r_i} + r_j + \sum_{i=j+1}^{n} {r_i} &=
+\sum_{i=1}^{j-1} {d_i} + d_j + \sum_{i=j+1}^{n} {d_i}\\
+&\implies \sum_{i=j+1}^{n} {r_i} > \sum_{i=j+1}^{n} {d_i}
+\end{align}
+
+\noindent Define S as the excess gas accrued from the $1$st to the $j$th can\\
+\indent \qquad T as the excess gas accrued from the $(j+1)$th to the $n$th can.
+\begin{align*}
+S := \sum_{i=1}^{j-1} {r_i} - \sum_{i=1}^{j-1} {d_i} &\geq 0\\
+T := \sum_{i=j+1}^{n} {r_i} - \sum_{i=j+1}^{n} {d_i} &> 0
+\end{align*}
+
+\noindent Now we have a starting position to complete the track.
+\begin{enumerate}[\indent Step 1:]
+	\item Start at $(j+1)$th can and continue past $n$th can to the 0 position. (4) guarantees that $\nexists j^\prime>j$ : (1) and (2) hold, i.e., the racecar won't get stuck along this section. 
+	\item Continue from $1$st can to $j$th can. (1) guarantees enough range.
+	\item From $j$th can to $(j+1)$th, use (3) to verify that the racecar has enough range complete the final leg: $d_j \leq T+S+r_j$
+\end{enumerate}
+By definition, the configuration is \emph{completable} by relabeling the gas cans
+\begin{align*}
+r: \{1,2,\ldots,n\} &\to \{1,2,\ldots,n\}\\
+i &\mapsto ((i-j-1)\mod{n}) + 1
+\end{align*}
+and starting at the position of the new first gas can.
+
+\qed
+\end{document}
