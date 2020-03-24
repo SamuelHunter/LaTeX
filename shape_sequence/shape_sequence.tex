@@ -1,0 +1,52 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{enumitem}
+\usepackage{cancel}
+
+\newcommand*{\Perm}[2]{P(#1, #2)}
+
+\begin{document}
+\title{Remembering a sequence of shapes}
+\author{Samuel Hunter}
+\date{10 January 2020}
+\maketitle
+
+\section*{Question}
+A sequence of $m$ unique shapes is shown to a participant. After given time to memorize the it, the participant is given $n$ unique shapes to recreate the sequence, which contain the original $m$. 1 point is awarded for each shape placed in its original position. What is the expected number of points the participant would earn if he/she guessed randomly?
+
+\section*{Solution}
+Define the indicator random variable
+\begin{equation}
+	X_k=
+	\begin{cases}
+		1, & \text{if the $k$th shape is correctly placed} \\
+		0, & \text{otherwise}
+	\end{cases}
+\end{equation}
+where $1 \leq k \leq m \leq n$\\
+
+\noindent \textbf{Proposition}\\$X_k$ is a Bernoulli trial with expected value $1/n$.\\
+
+\noindent \textbf{Proof}\\
+For the first shape the participant has $n$ choices, so $\mathbb{E}[X_1] = 1/n$.
+For a subsequent shape ($k \geq 2$) to be correct ($X_k = 1$), the ($k$th) shape cannot have been placed in the previous $(k-1)$ positions and it must be selected from the remaining $(n-k)$ shapes.\\
+\begin{align}
+	\mathbb{E}[X_k] &= 0 \cdot \mathbb{P}(X_k = 0) + 1 \cdot \mathbb{P}(X_k = 1)\\
+	&= \mathbb{P}(X_k = 1)\\
+	&= \frac{\Perm{n-1}{k-1} \cdot \frac{1}{n-k}}{\Perm{n}{k}}\\
+	&= \frac{\bcancel{n-1}}{n} \cdot \frac{\bcancel{n-2}}{\bcancel{n-1}} \cdot \ldots \cdot \frac{\bcancel{n-k}}{\bcancel{n-(k-1)}} \cdot \frac{1}{\bcancel{n-k}} = \frac{1}{n}
+\end{align}
+\emph{Note:} $\Perm{n}{k}$ represents the $k$-permutations of $n$ and is equal to $\frac{n!}{(n-k)!}$.\\
+
+\noindent In other words, the probability of a shape being correctly placed does not depend on its position in the sequence.\\
+
+\noindent Considering all $k$ shapes, the score is given by $Y = \sum_{i=1}^{m}{X_k}$.\\
+Since the $X_k$'s are independent and identically distributed, $Y \sim Binomial(m, \frac{1}{n})$.
+\begin{align}
+	\mathbb{E}[Y] &= m \cdot \frac{1}{n} = \frac{m}{n}\\
+	\textrm{Var}(Y) &= m \cdot \frac{1}{n} \cdot (1 - \frac{1}{n}) = \frac{m(n-1)}{n^2}
+\end{align}
+
+\end{document}

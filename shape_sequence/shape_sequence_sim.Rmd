@@ -1,0 +1,36 @@
+---
+title: "Simulated random guesses of a shape sequence"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, warning=FALSE}
+library(ggplot2)
+library(cbinom)
+iter <- 10000
+n <- 10
+m <- 7
+```
+
+```{r}
+key <- seq_len(m)
+choices <- seq_len(n)
+scores <- numeric(iter)
+
+for(i in seq_len(iter)) {
+  scores[i] <- sum(sample(choices, size=m) == key)
+}
+```
+
+```{r, fig.width=6, fig.height=4}
+ggplot() + aes(scores) +
+  geom_histogram(aes(y=..density..), binwidth=1, position=position_nudge(x = 0.5), fill="indianred1") +
+  geom_vline(xintercept=mean(scores), size=0.75, col="indianred4", linetype="dashed") +
+  stat_function(fun=dcbinom, args=list(seq(0, m), size=m, prob=1/n), size=0.75, col="indianred4") +
+  scale_x_continuous(name="Score", breaks=sort(c(seq(0, m), round(mean(scores), digits=1)))) +
+  scale_y_continuous(name="Density") +
+  ggtitle("Score distribution of random guesses")
+```
